@@ -5,6 +5,8 @@ from torch.utils.data import random_split, DataLoader
 from torchvision.datasets import ImageFolder
 
 
+dataset_path = r'/Users/vietpham1023/Desktop/new_dataset_1'
+
 class ConvNet(nn.Module):
     def __init__(self, num_classes):
         super(ConvNet, self).__init__()
@@ -51,10 +53,12 @@ class ConvNet(nn.Module):
 
 
 # device_configuration
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+mps_device = torch.device("mps:0")
+torch.set_default_device(mps_device)
 
 # Hyper-parameters
-num_epochs = 50
+num_epochs = 30
 batch_size = 32
 learning_rate = 0.001
 
@@ -66,7 +70,7 @@ data_transforms = transforms.Compose([
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Normalize
 ])
 
-dataset = ImageFolder(root=r'G:\data_set_for_yoga\new_dataset_1', transform=data_transforms)
+dataset = ImageFolder(root=dataset_path, transform=data_transforms)
 
 # Define the percentage for each split
 train_ratio = 0.8
@@ -80,9 +84,11 @@ test_size = total_size - train_size
 
 train_set, test_set = random_split(dataset, [train_size, test_size])
 
+
 train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_set, batch_size=batch_size)
 # val_loader = DataLoader(val_set, batch_size=batch_size)
+
 
 # Define the number of classes based on the dataset
 num_classes = len(dataset.classes)
@@ -171,7 +177,7 @@ accuracy = 100 * correct / total
 print(f'Test Overall Accuracy: {accuracy:.2f}%')
 
 # Save the model's state_dict (architecture and learned weights)
-torch.save(model.state_dict(), 'model1.pth')
+torch.save(model.state_dict(), 'model2.pth')
 
 # Optionally, save the optimizer's state_dict (if you want to resume training)
-torch.save(optimizer.state_dict(), 'optimizer1.pth')
+torch.save(optimizer.state_dict(), 'optimizer2.pth')

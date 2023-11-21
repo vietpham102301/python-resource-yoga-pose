@@ -6,6 +6,9 @@ from torchvision import transforms
 import torch.nn as nn
 from torchvision.datasets import ImageFolder
 
+dataset_path = r'/Users/vietpham1023/Downloads/new_dataset_1'
+model_path = r'/Users/vietpham1023/Desktop/python-resource-yoga-pose/model1.pth'
+
 
 class ConvNet(nn.Module):
     def __init__(self, num_classes):
@@ -59,17 +62,17 @@ def main(input_image_path):
 
     data_transforms = transforms.Compose([
         transforms.Resize((224, 224)),  # Resize images to a consistent size
-        # transforms.RandomHorizontalFlip(),  # Data augmentation
+        transforms.RandomHorizontalFlip(),  # Data augmentation
         transforms.ToTensor(),  # Convert to tensor
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Normalize
     ])
 
-    dataset = ImageFolder(root=r'G:\data_set_for_yoga\new_dataset', transform=data_transforms)
+    dataset = ImageFolder(root=dataset_path, transform=data_transforms)
     num_classes = len(dataset.classes)
     print(num_classes)
     model = ConvNet(num_classes)  # Re-create the model with the same architecture
 
-    model.load_state_dict(load(r'F:\pytorch_learn_1\model1.pth'))
+    model.load_state_dict(load(model_path))
     model.eval()  # Set the model to evaluation mode (important for inference)
 
     image = Image.open(input_image_path)
